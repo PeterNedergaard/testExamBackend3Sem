@@ -1,17 +1,27 @@
-package utils;
-
+package facades;
 
 import entities.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-public class Generate {
+import static org.junit.jupiter.api.Assertions.*;
 
-    public static void main(String[] args) {
+class FacadeTest {
 
-        EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
-        EntityManager em = emf.createEntityManager();
+    Facade facade = Facade.getFacade(EMF_Creator.createEntityManagerFactoryForTest());
+    EntityManagerFactory emf;
+    EntityManager em;
+
+    @BeforeEach
+    void setUp() {
+
+        emf = EMF_Creator.createEntityManagerFactoryForTest();
+        em = emf.createEntityManager();
 
         User user = new User("user", "test123");
         User admin = new User("admin", "test123");
@@ -68,6 +78,66 @@ public class Generate {
         em.persist(owner3);
 
         em.getTransaction().commit();
+
     }
 
+    @AfterEach
+    void tearDown() {
+        em.close();
+        emf.close();
+    }
+
+
+
+
+
+    @Test
+    void getAllOwners() {
+        System.out.println("Test for getting all owners");
+
+        int expected = 3;
+        int actual = facade.getAllOwners().size();
+
+        assertEquals(expected,actual);
+    }
+
+    @Test
+    void getHarbourByName() {
+        System.out.println("Test for getting harbour object from harbour name");
+
+        String expected = "Harbour1";
+        String actual = facade.getHarbourByName("Harbour1").getName();
+
+        assertEquals(expected,actual);
+    }
+
+    @Test
+    void getBoatsByHarbour() {
+        System.out.println("Test for getting all boats assigned to a specific harbour");
+
+        int expected = 2;
+        int actual = facade.getBoatsByHarbour(facade.getHarbourByName("Harbour1")).size();
+
+        assertEquals(expected,actual);
+    }
+
+    @Test
+    void getOwnersByBoat() {
+    }
+
+    @Test
+    void createBoat() {
+    }
+
+    @Test
+    void setBoatHarbour() {
+    }
+
+    @Test
+    void updateBoat() {
+    }
+
+    @Test
+    void deleteBoat() {
+    }
 }
