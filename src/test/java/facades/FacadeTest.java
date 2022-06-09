@@ -1,9 +1,7 @@
 package facades;
 
 import entities.*;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
@@ -14,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class FacadeTest {
 
     Facade facade = Facade.getFacade(EMF_Creator.createEntityManagerFactoryForTest());
-    EntityManagerFactory emf;
-    EntityManager em;
+    static EntityManagerFactory emf;
+    static EntityManager em;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    public static void setUp() {
 
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         em = emf.createEntityManager();
@@ -81,8 +79,8 @@ class FacadeTest {
 
     }
 
-    @AfterEach
-    void tearDown() {
+    @AfterAll
+    public static void tearDown() {
         em.close();
         emf.close();
     }
