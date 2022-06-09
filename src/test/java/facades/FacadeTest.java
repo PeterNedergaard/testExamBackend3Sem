@@ -28,7 +28,6 @@ class FacadeTest {
         Role userRole = new Role("user");
         Role adminRole = new Role("admin");
 
-
         Boat boat1 = new Boat("Brand1","Make1","Boat1","ImageURL1");
         Boat boat2 = new Boat("Brand2","Make2","Boat2","ImageURL2");
         Boat boat3 = new Boat("Brand3","Make3","Boat3","ImageURL3");
