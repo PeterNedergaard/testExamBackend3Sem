@@ -15,11 +15,12 @@ class FacadeTest {
     static EntityManagerFactory emf;
     static EntityManager em;
 
-    @BeforeAll
-    public static void setUp() {
+    @BeforeEach
+    void setUp() {
 
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         em = emf.createEntityManager();
+
 
         User user = new User("user", "test123");
         User admin = new User("admin", "test123");
@@ -55,32 +56,41 @@ class FacadeTest {
         both.addRole(userRole);
         both.addRole(adminRole);
 
-        em.getTransaction().begin();
+        try{
+            em.getTransaction().begin();
 
-        em.persist(userRole);
-        em.persist(adminRole);
-        em.persist(user);
-        em.persist(admin);
-        em.persist(both);
+            em.createQuery("delete from Boat").executeUpdate();
+            em.createQuery("delete from Harbour").executeUpdate();
+            em.createQuery("delete from Owner").executeUpdate();
+            em.createQuery("delete from Role").executeUpdate();
+            em.createQuery("delete from User").executeUpdate();
 
-        em.persist(boat1);
-        em.persist(boat2);
-        em.persist(boat3);
+            em.persist(userRole);
+            em.persist(adminRole);
+            em.persist(user);
+            em.persist(admin);
+            em.persist(both);
 
-        em.persist(harbour1);
-        em.persist(harbour2);
+            em.persist(boat1);
+            em.persist(boat2);
+            em.persist(boat3);
 
-        em.persist(owner1);
-        em.persist(owner2);
-        em.persist(owner3);
+            em.persist(harbour1);
+            em.persist(harbour2);
 
-        em.getTransaction().commit();
+            em.persist(owner1);
+            em.persist(owner2);
+            em.persist(owner3);
+
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
 
     }
 
-    @AfterAll
-    public static void tearDown() {
-        em.close();
+    @AfterEach
+    void tearDown() {
         emf.close();
     }
 
