@@ -13,4 +13,8 @@ GET http://localhost:8080/devops_starter_war_exploded/api/info/owners
 
 
 ###
-GET http://localhost:8080/devops_starter_war_exploded/api/info/boats/1
+GET http://localhost:8080/devops_starter_war_exploded/api/info/boats/Harbour1
+
+
+###
+GET http://localhost:8080/devops_starter_war_exploded/api/info/ownersbyboat/Boat1

@@ -97,16 +97,33 @@ public class Resource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("boats/{harbourId}")
-    public Response getBoatsByHarbourId(@PathParam("harbourId") Long harbourId) {
+    @Path("boats/{harbourName}")
+    public Response getBoatsByHarbourName(@PathParam("harbourName") String harbourName) {
 
         EntityManager em = EMF.createEntityManager();
 
-        List<BoatDTO> boatDTOList = BoatDTO.getBoatDTOs(facade.getBoatsByHarbour(em.find(Harbour.class, harbourId)));
+        List<BoatDTO> boatDTOList = BoatDTO.getBoatDTOs(facade.getBoatsByHarbour(facade.getHarbourByName(harbourName)));
 
         return Response
                 .ok()
                 .entity(gson.toJson(boatDTOList))
+                .build();
+
+    }
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("ownersbyboat/{boatName}")
+    public Response getOwnersByBoatName(@PathParam("boatName") String boatName) {
+
+        EntityManager em = EMF.createEntityManager();
+
+        List<OwnerDTO> ownerDTOList = OwnerDTO.getOwnerDTOs(facade.getOwnersByBoat(facade.getBoatByName(boatName)));
+
+        return Response
+                .ok()
+                .entity(gson.toJson(ownerDTOList))
                 .build();
 
     }

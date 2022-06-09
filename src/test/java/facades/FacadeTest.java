@@ -119,7 +119,23 @@ class FacadeTest {
     }
 
     @Test
+    void getBoatByName() {
+        System.out.println("Test for getting boat object from boat name");
+
+        String expected = "Boat1";
+        String actual = facade.getBoatByName("Boat1").getName();
+
+        assertEquals(expected,actual);
+    }
+
+    @Test
     void getOwnersByBoat() {
+        System.out.println("Test for getting all owners assigned to a specific boat");
+
+        int expected = 2;
+        int actual = facade.getOwnersByBoat(facade.getBoatByName("Boat1")).size();
+
+        assertEquals(expected,actual);
     }
 
     @Test

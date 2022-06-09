@@ -24,4 +24,6 @@ public interface Ifacade {
 
     Harbour getHarbourByName(String name);
 
+    Boat getBoatByName(String name);
+
 }

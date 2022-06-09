@@ -44,7 +44,8 @@ public class Facade implements Ifacade {
 
     @Override
     public List<Owner> getOwnersByBoat(Boat boat) {
-        return null;
+
+        return boat.getOwnerList();
     }
 
     @Override
@@ -68,7 +69,15 @@ public class Facade implements Ifacade {
     }
 
 
+    @Override
+    public Boat getBoatByName(String name) {
+        Boat boat;
 
+        boat = em.createQuery("SELECT b FROM Boat b WHERE b.name = :name",Boat.class)
+                .setParameter("name",name).getSingleResult();
+
+        return boat;
+    }
 
     @Override
     public Harbour getHarbourByName(String name) {
