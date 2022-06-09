@@ -7,6 +7,7 @@ import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
 import io.restassured.parsing.Parser;
 import java.net.URI;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.UriBuilder;
@@ -14,7 +15,11 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
 
@@ -26,6 +31,13 @@ public class ResourceTest {
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
     private static EntityManagerFactory emf;
+
+
+
+    private static Owner owner1,owner2,owner3;
+    private static Boat boat1,boat2,boat3;
+
+
 
     static HttpServer startServer() {
         ResourceConfig rc = ResourceConfig.forApplication(new ApplicationConfig());
@@ -67,16 +79,16 @@ public class ResourceTest {
         Role userRole = new Role("user");
         Role adminRole = new Role("admin");
 
-        Boat boat1 = new Boat("Brand1","Make1","Boat1","ImageURL1");
-        Boat boat2 = new Boat("Brand2","Make2","Boat2","ImageURL2");
-        Boat boat3 = new Boat("Brand3","Make3","Boat3","ImageURL3");
+        boat1 = new Boat("Brand1","Make1","Boat1","ImageURL1");
+        boat2 = new Boat("Brand2","Make2","Boat2","ImageURL2");
+        boat3 = new Boat("Brand3","Make3","Boat3","ImageURL3");
 
         Harbour harbour1 = new Harbour("Harbour1","Address1","20");
         Harbour harbour2 = new Harbour("Harbour2","Address2","15");
 
-        Owner owner1 = new Owner("Owner1","HomeAddress1","12345678");
-        Owner owner2 = new Owner("Owner2","HomeAddress2","87654321");
-        Owner owner3 = new Owner("Owner3","HomeAddress3","43215678");
+        owner1 = new Owner("Owner1","HomeAddress1","12345678");
+        owner2 = new Owner("Owner2","HomeAddress2","87654321");
+        owner3 = new Owner("Owner3","HomeAddress3","43215678");
 
 
         owner1.addBoat(boat1);
@@ -132,9 +144,55 @@ public class ResourceTest {
         emf.close();
     }
 
+
     @Test
     public void testServerIsUp() {
         given().when().get("/info").then().statusCode(200);
+    }
+
+
+    @Test
+    public void getAllOwners() {
+        System.out.println("Testing to get all owners");
+
+        List<Owner> actualOwnerList = given()
+                .contentType("application/json")
+                .when()
+                .get("/info/owners")
+                .then()
+                .extract().body().jsonPath().getList("",Owner.class);
+
+        assertThat(actualOwnerList, containsInAnyOrder(owner1,owner2,owner3));
+    }
+
+
+    @Test
+    public void getBoatsByHarbourName() {
+        System.out.println("Testing to get all boats by specific harbour name");
+
+        List<Boat> actualBoatList = given()
+                .contentType("application/json")
+                .when()
+                .get("/info/boats/Harbour1")
+                .then()
+                .extract().body().jsonPath().getList("",Boat.class);
+
+        assertThat(actualBoatList, containsInAnyOrder(boat1,boat3));
+    }
+
+
+    @Test
+    public void getOwnersByBoatName() {
+        System.out.println("Testing to get all owners by specific boat");
+
+        List<Owner> actualOwnerList = given()
+                .contentType("application/json")
+                .when()
+                .get("/info/ownersbyboat/Boat1")
+                .then()
+                .extract().body().jsonPath().getList("",Owner.class);
+
+        assertThat(actualOwnerList, containsInAnyOrder(owner1,owner3));
     }
 
 }
