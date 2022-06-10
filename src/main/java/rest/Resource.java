@@ -222,7 +222,7 @@ public class Resource {
 
         return Response
                 .ok()
-                .entity(facade.deleteBoat(boat))
+                .entity(new BoatDTO(facade.deleteBoat(boat)))
                 .build();
     }
 

@@ -20,7 +20,7 @@ public interface Ifacade {
 
     Boat updateBoat(Boat boat,Owner owner, Harbour harbour);
 
-    String deleteBoat(Boat boat);
+    Boat deleteBoat(Boat boat);
 
     Harbour getHarbourByName(String name);
 

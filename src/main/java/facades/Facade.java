@@ -74,16 +74,16 @@ public class Facade implements Ifacade {
     }
 
     @Override
-    public String deleteBoat(Boat boat) {
+    public Boat deleteBoat(Boat boat) {
 
         em.getTransaction().begin();
         em.remove(boat);
         em.getTransaction().commit();
 
         if (em.find(Boat.class,boat.getId()) == null){
-            return "deleted";
+            return boat;
         } else {
-            return "not deleted";
+            return null;
         }
     }
 

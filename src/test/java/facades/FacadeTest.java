@@ -178,8 +178,8 @@ class FacadeTest {
     void deleteBoat() {
         System.out.println("Test for deleting a boat");
 
-        String expected = "deleted";
-        String actual = facade.deleteBoat(facade.getBoatByName("Boat1"));
+        Boat expected = facade.getBoatByName("Boat1");
+        Boat actual = facade.deleteBoat(facade.getBoatByName("Boat1"));
 
         assertEquals(expected,actual);
     }

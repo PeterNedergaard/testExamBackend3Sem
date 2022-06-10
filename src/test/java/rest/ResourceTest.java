@@ -2,8 +2,12 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import dtos.BoatDTO;
+import dtos.HarbourDTO;
 import entities.*;
+import facades.Facade;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
@@ -35,12 +39,12 @@ public class ResourceTest {
     private static HttpServer httpServer;
     private static EntityManagerFactory emf;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
+    Facade facade = Facade.getFacade(EMF_Creator.createEntityManagerFactoryForTest());
 
 
     private static Owner owner1,owner2,owner3;
     private static Boat boat1,boat2,boat3;
-
+    private static Harbour harbour1, harbour2;
 
 
     static HttpServer startServer() {
@@ -87,8 +91,8 @@ public class ResourceTest {
         boat2 = new Boat("Brand2","Make2","Boat2","ImageURL2");
         boat3 = new Boat("Brand3","Make3","Boat3","ImageURL3");
 
-        Harbour harbour1 = new Harbour("Harbour1","Address1","20");
-        Harbour harbour2 = new Harbour("Harbour2","Address2","15");
+        harbour1 = new Harbour("Harbour1","Address1","20");
+        harbour2 = new Harbour("Harbour2","Address2","15");
 
         owner1 = new Owner("Owner1","HomeAddress1","12345678");
         owner2 = new Owner("Owner2","HomeAddress2","87654321");
@@ -218,6 +222,44 @@ public class ResourceTest {
                 .extract().body().jsonPath().getObject("",BoatDTO.class);
 
         assertThat(actualBoatDTO.getName(), equalTo(expectedBoatDTO.getName()));
+    }
+
+
+    @Test
+    public void setBoatHarbour() {
+        System.out.println("Testing to set the harbour of a specific boat");
+
+        String body = "{'boatName':'Boat1','harbourName':'Harbour2'}";
+        JsonObject jsonObject = (JsonObject) JsonParser.parseString(body);
+
+        HarbourDTO expectedHarbourDTO = given()
+                .contentType("application/json").body(jsonObject)
+                .when()
+                .post("/info/setharbour")
+                .then()
+                .extract().body().jsonPath().getObject("",HarbourDTO.class);
+
+        assertThat(harbour2.getName(), equalTo(expectedHarbourDTO.getName()));
+    }
+
+
+    @Test
+    public void deleteBoat() {
+        System.out.println("Testing to delete a boat");
+
+        BoatDTO actualBoatDTO = new BoatDTO(facade.getBoatByName("Boat1"));
+
+        String body = "{'boatName':'Boat1'}";
+        JsonObject jsonObject = (JsonObject) JsonParser.parseString(body);
+
+        BoatDTO expectedBoatDTO = given()
+                .contentType("application/json").body(jsonObject)
+                .when()
+                .post("/info/deleteboat")
+                .then()
+                .extract().body().jsonPath().getObject("",BoatDTO.class);
+
+        assertThat(actualBoatDTO, equalTo(expectedBoatDTO));
     }
 
 }
