@@ -37,9 +37,7 @@ public class Facade implements Ifacade {
     @Override
     public List<Boat> getBoatsByHarbour(Harbour harbour) {
 
-        return em.createQuery("SELECT b FROM Boat b WHERE b.harbour.id = :harbourId", Boat.class)
-                .setParameter("harbourId",harbour.getId()).getResultList();
-
+        return harbour.getBoatList();
     }
 
     @Override
