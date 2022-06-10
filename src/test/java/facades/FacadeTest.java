@@ -152,7 +152,11 @@ class FacadeTest {
     void createBoat() {
         System.out.println("Test for creating a boat");
 
-        Long expected = 4L;
+        EntityManager em = emf.createEntityManager();
+        Long maxId = em.createQuery("SELECT b FROM Boat b ORDER BY b.id DESC",Boat.class).setMaxResults(1).getSingleResult().getId();
+        em.close();
+
+        Long expected = maxId + 1;
         Long actual = facade.createBoat("newBrand","newMake", "newBoat","newImageURL").getId();
 
         assertEquals(expected,actual);
