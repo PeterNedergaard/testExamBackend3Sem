@@ -18,9 +18,9 @@ public interface Ifacade {
 
     Harbour setBoatHarbour(Boat boat, Harbour harbour);
 
-    Boat updateBoat(Owner owner, Harbour harbour);
+    Boat updateBoat(Boat boat,Owner owner, Harbour harbour);
 
-    Boat deleteBoat(Boat boat);
+    String deleteBoat(Boat boat);
 
     Harbour getHarbourByName(String name);
 

@@ -48,23 +48,40 @@ public class Facade implements Ifacade {
 
     @Override
     public Boat createBoat(String brand, String make, String name, String image) {
-        return null;
+        Boat boat = new Boat(brand,make,name,image);
+
+        em.getTransaction().begin();
+        em.persist(boat);
+        em.getTransaction().commit();
+
+        return boat;
     }
 
     @Override
     public Harbour setBoatHarbour(Boat boat, Harbour harbour) {
+        boat.setHarbour(harbour);
+
+        em.merge(boat);
+
+        return boat.getHarbour();
+    }
+
+    @Override
+    public Boat updateBoat(Boat boat,Owner owner, Harbour harbour) {
         return null;
     }
 
     @Override
-    public Boat updateBoat(Owner owner, Harbour harbour) {
-        return null;
+    public String deleteBoat(Boat boat) {
+        em.remove(boat);
+
+        if (em.find(Boat.class,boat.getId()) == null){
+            return "deleted";
+        } else {
+            return "not deleted";
+        }
     }
 
-    @Override
-    public Boat deleteBoat(Boat boat) {
-        return null;
-    }
 
 
     @Override

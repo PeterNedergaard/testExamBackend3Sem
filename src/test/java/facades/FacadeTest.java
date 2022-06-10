@@ -150,10 +150,20 @@ class FacadeTest {
 
     @Test
     void createBoat() {
+        System.out.println("Test for creating a boat");
+
+        Long expected = 4L;
+        Long actual = facade.createBoat("newBrand","newMake", "newBoat","newImageURL").getId();
+
+        assertEquals(expected,actual);
     }
 
     @Test
     void setBoatHarbour() {
+        System.out.println("Test for setting a boats harbour");
+
+        String expected = "Harbour2";
+        String actual = facade.setBoatHarbour(facade.getBoatByName("Boat1"),facade.getHarbourByName("Harbour2")).getName();
     }
 
     @Test
@@ -162,5 +172,11 @@ class FacadeTest {
 
     @Test
     void deleteBoat() {
+        System.out.println("Test for deleting a boat");
+
+        String expected = "deleted";
+        String actual = facade.deleteBoat(facade.getBoatByName("Boat1"));
+
+        assertEquals(expected,actual);
     }
 }
