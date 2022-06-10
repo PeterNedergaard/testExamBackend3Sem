@@ -61,7 +61,9 @@ public class Facade implements Ifacade {
     public Harbour setBoatHarbour(Boat boat, Harbour harbour) {
         boat.setHarbour(harbour);
 
-        em.merge(boat);
+        em.getTransaction().begin();
+        em.persist(boat);
+        em.getTransaction().commit();
 
         return boat.getHarbour();
     }
@@ -73,7 +75,10 @@ public class Facade implements Ifacade {
 
     @Override
     public String deleteBoat(Boat boat) {
+
+        em.getTransaction().begin();
         em.remove(boat);
+        em.getTransaction().commit();
 
         if (em.find(Boat.class,boat.getId()) == null){
             return "deleted";

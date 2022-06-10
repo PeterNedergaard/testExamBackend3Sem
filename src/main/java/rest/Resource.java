@@ -2,9 +2,12 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import dtos.BoatDTO;
 import dtos.HarbourDTO;
 import dtos.OwnerDTO;
+import entities.Boat;
 import entities.Harbour;
 import entities.Owner;
 import entities.User;
@@ -13,12 +16,10 @@ import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import javax.ws.rs.Produces;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 
+import errorhandling.API_Exception;
 import facades.Facade;
 import utils.EMF_Creator;
 
@@ -126,6 +127,103 @@ public class Resource {
                 .entity(gson.toJson(ownerDTOList))
                 .build();
 
+    }
+
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("createboat")
+    public Response createBoat(String jsonString) throws API_Exception {
+
+        EntityManager em = EMF.createEntityManager();
+
+        String brand;
+        String make;
+        String name;
+        String image;
+
+        try{
+            JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
+            brand = json.get("brand").getAsString();
+            make = json.get("make").getAsString();
+            name = json.get("name").getAsString();
+            image = json.get("image").getAsString();
+
+        } catch (Exception e) {
+            throw new API_Exception("Malformed JSON Suplied", 400, e);
+        }
+
+
+        return Response
+                .ok()
+                .entity(new BoatDTO(facade.createBoat(brand,make,name,image)))
+                .build();
+    }
+
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("setharbour")
+    public Response setBoatHarbour(String jsonString) throws API_Exception {
+
+        EntityManager em = EMF.createEntityManager();
+
+        Boat boat;
+        Harbour harbour;
+
+        String boatName;
+        String harbourName;
+
+        try{
+            JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
+
+            boatName = json.get("boatName").getAsString();
+            harbourName = json.get("harbourName").getAsString();
+
+        } catch (Exception e) {
+            throw new API_Exception("Malformed JSON Suplied", 400, e);
+        }
+
+        boat = facade.getBoatByName(boatName);
+        harbour = facade.getHarbourByName(harbourName);
+
+
+        return Response
+                .ok()
+                .entity(new HarbourDTO(facade.setBoatHarbour(boat,harbour)))
+                .build();
+    }
+
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("deleteboat")
+    public Response deleteBoat(String jsonString) throws API_Exception {
+
+        EntityManager em = EMF.createEntityManager();
+
+        Boat boat;
+        String boatName;
+
+        try{
+            JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
+
+            boatName = json.get("boatName").getAsString();
+
+        } catch (Exception e) {
+            throw new API_Exception("Malformed JSON Suplied", 400, e);
+        }
+
+        boat = facade.getBoatByName(boatName);
+
+
+        return Response
+                .ok()
+                .entity(facade.deleteBoat(boat))
+                .build();
     }
 
 

@@ -18,3 +18,31 @@ GET http://localhost:8080/devops_starter_war_exploded/api/info/boats/Harbour1
 
 ###
 GET http://localhost:8080/devops_starter_war_exploded/api/info/ownersbyboat/Boat1
+
+
+###
+POST http://localhost:8080/devops_starter_war_exploded/api/info/createboat
+
+{
+brand: "NewestBrand",
+make: "NewestMake",
+name: "NewestBoat",
+image: "NewestImgURL"
+}
+
+
+###
+POST http://localhost:8080/devops_starter_war_exploded/api/info/setharbour
+
+{
+boatName: "Boat3",
+harbourName: "Harbour2"
+}
+
+
+###
+POST http://localhost:8080/devops_starter_war_exploded/api/info/deleteboat
+
+{
+boatName: "NewestBoat"
+}

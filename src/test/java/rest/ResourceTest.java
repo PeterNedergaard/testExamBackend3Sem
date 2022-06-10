@@ -1,5 +1,8 @@
 package rest;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import dtos.BoatDTO;
 import entities.*;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
@@ -31,6 +34,7 @@ public class ResourceTest {
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
     private static EntityManagerFactory emf;
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 
 
@@ -193,6 +197,27 @@ public class ResourceTest {
                 .extract().body().jsonPath().getList("",Owner.class);
 
         assertThat(actualOwnerList, containsInAnyOrder(owner1,owner3));
+    }
+
+
+    @Test
+    public void createBoat() {
+        System.out.println("Testing to create a boat");
+
+        Boat boat = new Boat("NewestBrand","NewestMake","NewestBoat","NewestImgURL");
+
+        BoatDTO actualBoatDTO = new BoatDTO(boat);
+
+        String body = GSON.toJson(actualBoatDTO);
+
+        BoatDTO expectedBoatDTO = given()
+                .contentType("application/json").body(body)
+                .when()
+                .post("/info/createboat")
+                .then()
+                .extract().body().jsonPath().getObject("",BoatDTO.class);
+
+        assertThat(actualBoatDTO.getName(), equalTo(expectedBoatDTO.getName()));
     }
 
 }
