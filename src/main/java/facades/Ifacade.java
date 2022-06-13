@@ -10,6 +10,10 @@ public interface Ifacade {
 
     List<Owner> getAllOwners();
 
+    List<Harbour> getAllHarbours();
+
+    List<Boat> getAllBoats();
+
     List<Boat> getBoatsByHarbour(Harbour harbour);
 
     List<Owner> getOwnersByBoat(Boat boat);

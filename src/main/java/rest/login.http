@@ -13,6 +13,10 @@ GET http://localhost:8080/devops_starter_war_exploded/api/info/owners
 
 
 ###
+GET http://localhost:8080/devops_starter_war_exploded/api/info/harbours
+
+
+###
 GET http://localhost:8080/devops_starter_war_exploded/api/info/boats/Harbour1
 
 
@@ -35,7 +39,7 @@ image: "NewestImgURL"
 POST http://localhost:8080/devops_starter_war_exploded/api/info/setharbour
 
 {
-boatName: "Boat3",
+boatName: "Boat1",
 harbourName: "Harbour2"
 }
 
@@ -46,3 +50,7 @@ POST http://localhost:8080/devops_starter_war_exploded/api/info/deleteboat
 {
 boatName: "NewestBoat"
 }
+
+
+###
+GET http://localhost:8080/devops_starter_war_exploded/api/info/allboats

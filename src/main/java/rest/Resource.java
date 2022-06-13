@@ -98,6 +98,36 @@ public class Resource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("allboats")
+    public Response getAllBoats() {
+
+        List<BoatDTO> boatDTOList = BoatDTO.getBoatDTOs(facade.getAllBoats());
+
+        return Response
+                .ok()
+                .entity(gson.toJson(boatDTOList))
+                .build();
+
+    }
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("harbours")
+    public Response getAllHarbours() {
+
+        List<HarbourDTO> harbourDTOList = HarbourDTO.getHarbourDTOs(facade.getAllHarbours());
+
+        return Response
+                .ok()
+                .entity(gson.toJson(harbourDTOList))
+                .build();
+
+    }
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("boats/{harbourName}")
     public Response getBoatsByHarbourName(@PathParam("harbourName") String harbourName) {
 

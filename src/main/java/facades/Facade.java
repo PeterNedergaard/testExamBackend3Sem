@@ -34,6 +34,21 @@ public class Facade implements Ifacade {
         return em.createQuery("SELECT o FROM Owner o",Owner.class).getResultList();
     }
 
+
+    @Override
+    public List<Harbour> getAllHarbours() {
+
+        return em.createQuery("SELECT h FROM Harbour h",Harbour.class).getResultList();
+    }
+
+
+    @Override
+    public List<Boat> getAllBoats() {
+
+        return em.createQuery("SELECT b FROM Boat b",Boat.class).getResultList();
+    }
+
+
     @Override
     public List<Boat> getBoatsByHarbour(Harbour harbour) {
 
@@ -59,10 +74,15 @@ public class Facade implements Ifacade {
 
     @Override
     public Harbour setBoatHarbour(Boat boat, Harbour harbour) {
+
+        if (boat.getHarbour() != null){
+            boat.getHarbour().getBoatList().remove(boat);
+        }
+
         boat.setHarbour(harbour);
 
         em.getTransaction().begin();
-        em.persist(boat);
+        em.merge(boat);
         em.getTransaction().commit();
 
         return boat.getHarbour();
@@ -75,6 +95,10 @@ public class Facade implements Ifacade {
 
     @Override
     public Boat deleteBoat(Boat boat) {
+
+        for (Harbour h : getAllHarbours()) {
+            h.getBoatList().remove(boat);
+        }
 
         em.getTransaction().begin();
         em.remove(boat);

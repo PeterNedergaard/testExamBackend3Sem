@@ -108,6 +108,18 @@ class FacadeTest {
         assertEquals(expected,actual);
     }
 
+
+    @Test
+    void getAllBoats() {
+        System.out.println("Test for getting all boats");
+
+        int expected = 3;
+        int actual = facade.getAllBoats().size();
+
+        assertEquals(expected,actual);
+    }
+
+
     @Test
     void getHarbourByName() {
         System.out.println("Test for getting harbour object from harbour name");
